@@ -18,3 +18,5 @@ node_modules/*
 # Homestead
 .vagrant
 Homestead.yaml
+
+/storage/*.csv
