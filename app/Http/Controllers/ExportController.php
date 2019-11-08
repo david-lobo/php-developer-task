@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 use Bueltge\Marksimple\Marksimple;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ExportSelected;
+use App\Http\Requests\DownloadFile;
+use App\Library\CSVFileExporter;
+use App\Services\StudentExportService;
+use Illuminate\Support\Facades\Validator;
+use Storage;
+use Carbon\Carbon;
 
 class ExportController extends Controller
 {
@@ -39,9 +45,12 @@ class ExportController extends Controller
     /**
      * Exports selected students data to a CSV file
      */
-    public function export(ExportSelected $request)
+    public function export(ExportSelected $request, StudentExportService $exporter)
     {
-        //
+        $ids = $request->input('studentId.*', []);
+        $csvFilename = $exporter->exportSelected($ids);
+
+        return response()->download(storage_path('app/' . $csvFilename));
     }
 
     /**
@@ -86,5 +95,34 @@ class ExportController extends Controller
     public function exportCourseAttendenceToCsvWithVue()
     {
         //
+    }
+
+    /**
+     * View history of exports
+     */
+    public function viewHistory()
+    {
+        $files = Storage::files('/');
+        $files = array_map(function($file) {
+            return [
+                'name' => $file,
+                'size' => Storage::size($file),
+                'last_modified' => Carbon::createFromTimestampUTC(
+                    Storage::lastModified($file)
+                )
+            ];
+        }, $files);
+        
+        return view('view_history', compact(['files']));
+    }
+
+    /**
+     * Exports selected students data to a CSV file
+     */
+    public function download(Request $request)
+    {
+        $file = $request->input('file');
+
+        return response()->download(storage_path('app/' . $file));
     }
 }

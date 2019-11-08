@@ -33,4 +33,16 @@ class Student extends Model
     {
         return $this->hasOne(StudentAddress::class, 'id');
     }
+
+    public static function toCSV($record) {
+        $row = [
+            $record['firstname'] ?? '',
+            $record['surname'] ?? '',
+            $record['email'] ?? '',
+            $record['course']['university'] ?? '',
+            $record['course']['course_name'] ?? ''
+        ];
+
+        return $row;
+    }
 }

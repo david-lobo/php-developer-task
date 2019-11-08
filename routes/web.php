@@ -14,6 +14,8 @@
 Route::get('', [ 'uses' => 'ExportController@welcome', 'as' => 'home'] );
 Route::get('view', [ 'uses' => 'ExportController@viewStudents', 'as' => 'view'] );
 Route::post('export', [ 'uses' => 'ExportController@export', 'as' => 'export'] );
+Route::get('history', [ 'uses' => 'ExportController@viewHistory', 'as' => 'history'] );
+Route::get('download', [ 'uses' => 'ExportController@download', 'as' => 'download'] );
 
 // Optional extra
 Route::get('view-vue', [ 'uses' => 'ExportController@viewStudentsWithVue', 'as' => 'view-vue'] );

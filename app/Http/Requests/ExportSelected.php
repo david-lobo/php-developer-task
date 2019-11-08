@@ -28,9 +28,11 @@ class ExportSelected extends FormRequest
         if (count($this->request->get('studentId')) > 0) {
             foreach($this->request->get('studentId') as $key => $val) {
                 $rules['studentId.'.$key] = 'integer';
+                $rules['studentId.'.$key] = 'min:1';
+                $rules['studentId.'.$key] = 'exists:student,id';
             }
         }
-
-        return $rules;
+        
+        return $rules;   
     }
 }
